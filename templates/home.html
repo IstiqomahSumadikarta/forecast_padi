@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Forecasting Produktivitats Panen Padi Indonesia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: rgb(216, 216, 228);
+            background: linear-gradient(90deg, rgba(216, 216, 228, 1) 0%, rgba(176, 192, 195, 0.5) 100%);
+        }
+
+        label {
+            padding-top: 10px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div style="width: 640px; margin:auto;">
+            <h1>Forecasting Produktivitats Panen Padi Indonesia</h1>
+            <form method="POST" action="{{url_for('home')}}">
+                <div class="form-group">
+                    <label for="prov">Provinsi</label>
+                    <select id="prov" class="form-select" aria-label="Default select example" name="provinsi">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stp">Forecasting step</label>
+                    <input id="stp" class="form-control" name="step" type="number" value="5">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    (function () {
+        // your page initialization code here
+        var data_prov = "{{data}}"
+        data_prov = data_prov.replace(/&#39;/g, '"');
+        data_prov = data_prov.replace("[", "")
+        data_prov = data_prov.replace("]", "")
+        data_prov = data_prov.replace(/" "/g, ',')
+        data_prov = data_prov.replace(/\t/g, ' ');
+        data_prov = data_prov.replace(/\r?\n|\r/g, ' ');
+        data_prov = data_prov.replace(/"/g, '');
+        data_prov = data_prov.split(",")
+        for (i = 0; i < data_prov.length; i++) {
+            //console.log(document.getElementById("prov").innerHTML)//.appendChild('<option value="' + data_prov[i] + '">' + data_prov[i] + '</option>')
+            var node = document.createElement("OPTION");
+            node.setAttribute('value', data_prov[i])
+            node.appendChild(document.createTextNode(data_prov[i]))
+            document.getElementById("prov").appendChild(node)
+        }
+
+    })();
+
+</script>
+
+</html>

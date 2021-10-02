@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Forecasting Produktivitats Panen Padi Indonesia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: rgb(216, 216, 228);
+            background: linear-gradient(90deg, rgba(216, 216, 228, 1) 0%, rgba(176, 192, 195, 0.5) 100%);
+        }
+    </style>
+</head>
+
+<body>
+    <div class=".container">
+        <div style="width: 640px; margin:auto;">
+            <h1>Forecasting Produktivitats Panen Padi Indonesia</h1>
+
+            <canvas id="myChart" width="400" height="400"></canvas>
+            <script>
+                var data_pred = '{{data}}'
+                data_pred = data_pred.replace(/&#39;/g, '"');
+                data_pred = data_pred.replace(/\t/g, ' ');
+                data_pred = data_pred.replace(/\r?\n|\r/g, ' ');
+                //prompt("test", data_pred)
+                var objson = JSON.parse(data_pred)
+                objson['tahun'] = objson['tahun'].split(/[ ,]+/).join(',')
+                objson['tahun'] = objson['tahun'].replace("[", "")
+                objson['tahun'] = objson['tahun'].replace("]", "")
+                objson['tahun'] = objson['tahun'].split(",")
+                objson['data1'] = objson['data1'].split(/[ ,]+/).join(',')
+                objson['data1'] = objson['data1'].replace("[", "")
+                objson['data1'] = objson['data1'].replace("]", "")
+                objson['data1'] = objson['data1'].split(",")
+                objson['data2'] = objson['data2'].split(/[ ,]+/).join(',')
+                objson['data2'] = objson['data2'].replace("[", "")
+                objson['data2'] = objson['data2'].replace("]", "")
+                objson['data2'] = objson['data2'].split(",")
+                for (i = 0; i < objson['data1'].length; i++) {
+                    objson['data2'].unshift(NaN);
+                    if (objson['data1'][i] == 0) objson['data1'][i] = NaN
+                }
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: objson['tahun'],
+                        datasets: [{
+                            label: 'Observasi',
+                            data: objson['data1'],
+                            borderColor: '#ff0000',
+                            backgroundColor: 'rgb(255, 99, 132)',
+                        }, {
+                            label: 'Forecasting',
+                            data: objson['data2'],
+                            borderColor: '#0000ff',
+                            backgroundColor: 'rgb(255, 99, 132)',
+                        }]
+                    },
+                    options: {
+                        aspectRatio: 2,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Provinsi: ' + objson['provinsi'] + ', Step: ' + objson['step'] + ' Tahun'
+                            }
+                        }
+                    }
+                });
+            </script>
+            <a class="btn btn-primary" href="/">Kembali ke Home</a>
+        </div>
+    </div>
+</body>
+
+</html>
